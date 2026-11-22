@@ -185,7 +185,10 @@ button:disabled {
 
 <script>
 
-const ESP_URL = "";
+const ESP_URL =
+    window.location.protocol === "file:"
+    ? "http://192.168.4.1"
+    : "";
 
 let led = false;
 
