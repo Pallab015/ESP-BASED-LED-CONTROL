@@ -3,20 +3,12 @@
 
 <widget
     id="com.esp8266.ledcontroller"
-    version="2.0.0"
+    version="2.0.1"
     xmlns="http://www.w3.org/ns/widgets"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    xmlns:cdv="http://cordova.apache.org/ns/1.0"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <name>ESP8266 LED Control</name>
-
-    <description>
-        Advanced ESP8266 WiFi LED Controller
-    </description>
-
-    <author email="developer@example.com">
-        ESP8266 Controller
-    </author>
 
     <content src="index.html"/>
 
@@ -25,31 +17,10 @@
     <allow-navigation href="http://192.168.4.1/*"/>
 
     <preference name="AndroidXEnabled" value="true"/>
-    <preference name="Fullscreen" value="false"/>
-    <preference name="Orientation" value="portrait"/>
-    <preference name="SplashScreenDelay" value="2000"/>
-    <preference name="FadeSplashScreenDuration" value="300"/>
-    <preference name="AutoHideSplashScreen" value="true"/>
-    <preference name="AndroidWindowSplashScreenBackground" value="#101827"/>
+
+    <preference name="AndroidInsecureFileModeEnabled" value="true"/>
 
     <platform name="android">
-
-        <icon src="www/img/icon.png"/>
-
-        <splash src="www/img/splash.png"/>
-
-        <edit-config
-            file="app/src/main/AndroidManifest.xml"
-            target="/manifest"
-            mode="merge">
-
-            <uses-permission
-                android:name="android.permission.INTERNET"/>
-
-            <uses-permission
-                android:name="android.permission.ACCESS_NETWORK_STATE"/>
-
-        </edit-config>
 
         <edit-config
             file="app/src/main/AndroidManifest.xml"
