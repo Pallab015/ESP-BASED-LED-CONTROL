@@ -1,0 +1,20 @@
+
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="1280" height="1280" viewBox="0 0 1280 1280">
+  <rect width="1280" height="1280" fill="#101827"/>
+  <circle cx="640" cy="490" r="190" fill="#1e293b"/>
+  <path d="M535 465a105 105 0 1 1 210 0c0 48-28 77-53 106h-104c-25-29-53-58-53-106"
+        fill="#facc15" stroke="#fbbf24" stroke-width="15"/>
+  <path d="M590 580h100M595 615h90M610 650h60"
+        stroke="#38bdf8" stroke-width="18" stroke-linecap="round"/>
+  <text x="640" y="810" text-anchor="middle"
+        font-family="Arial" font-size="70"
+        font-weight="bold" fill="#38bdf8">
+    ESP8266
+  </text>
+  <text x="640" y="880" text-anchor="middle"
+        font-family="Arial" font-size="38"
+        letter-spacing="8" fill="#ffffff">
+    LED CONTROLLER
+  </text>
+</svg>
