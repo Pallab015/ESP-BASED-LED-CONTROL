@@ -1,0 +1,77 @@
+
+name: ESP8266 Advanced Android Build
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install SVG Converter
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y librsvg2-bin
+
+      - name: Generate App Images
+        run: |
+          rsvg-convert -w 512 -h 512 \
+            www/img/icon.svg \
+            -o www/img/icon.png
+
+          rsvg-convert -w 1280 -h 1280 \
+            www/img/splash.svg \
+            -o www/img/splash.png
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK
+        run: |
+          sdkmanager "platforms;android-35"
+          sdkmanager "build-tools;35.0.0"
+
+      - name: Install Cordova
+        run: npm install -g cordova@12
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Add Android Platform
+        run: cordova platform add android@14.0.1
+
+      - name: Build Android APK
+        run: cordova build android --debug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ESP8266-Advanced-LED-APK
+          path: platforms/android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 30
