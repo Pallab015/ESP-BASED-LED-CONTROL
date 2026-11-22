@@ -1,0 +1,13 @@
+
+{
+  "name": "esp8266-led-controller",
+  "version": "2.0.0",
+  "description": "Advanced ESP8266 LED Controller",
+  "displayName": "ESP8266 LED Control",
+  "scripts": {
+    "build": "cordova build android"
+  },
+  "devDependencies": {
+    "cordova": "^12.0.0"
+  }
+}
