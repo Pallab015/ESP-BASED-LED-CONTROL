@@ -1,14 +1,14 @@
-
 <?xml version="1.0" encoding="UTF-8"?>
 
 <widget
     id="com.esp8266.ledcontroller"
-    version="2.0.1"
+    version="2.0.2"
     xmlns="http://www.w3.org/ns/widgets"
-    xmlns:cdv="http://cordova.apache.org/ns/1.0"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <name>ESP8266 LED Control</name>
+
+    <description>ESP8266 WiFi LED Controller</description>
 
     <content src="index.html"/>
 
@@ -18,14 +18,14 @@
 
     <preference name="AndroidXEnabled" value="true"/>
 
-    <preference name="AndroidInsecureFileModeEnabled" value="true"/>
+    <preference name="Fullscreen" value="false"/>
 
     <platform name="android">
 
         <edit-config
             file="app/src/main/AndroidManifest.xml"
-            target="/manifest/application"
-            mode="merge">
+            mode="merge"
+            target="/manifest/application">
 
             <application
                 android:usesCleartextTraffic="true"/>
