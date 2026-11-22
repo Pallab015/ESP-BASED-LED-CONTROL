@@ -1,120 +1,387 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta charset="UTF-8">
 
-    <meta http-equiv="Content-Security-Policy"
-          content="default-src 'self' data: content:;
-          img-src 'self' data:;
-          style-src 'self';
-          script-src 'self';
-          connect-src 'self' http://192.168.4.1;">
+<meta name="viewport"
+content="width=device-width, initial-scale=1">
 
-    <title>ESP8266 LED Control</title>
+<title>ESP8266 LED Control</title>
 
-    <link rel="stylesheet" href="css/style.css">
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+
+    font-family: Arial, sans-serif;
+
+    text-align: center;
+
+    background: #101827;
+
+    color: white;
+
+    margin: 0;
+
+    padding: 50px 15px;
+
+}
+
+.container {
+
+    background: #1e293b;
+
+    padding: 30px 20px;
+
+    margin: auto;
+
+    max-width: 450px;
+
+    border-radius: 20px;
+
+    box-shadow: 0 10px 30px #0005;
+
+}
+
+h1 {
+
+    color: #38bdf8;
+
+}
+
+.hero-icon {
+
+    font-size: 65px;
+
+    margin: 20px;
+
+}
+
+#status {
+
+    font-size: 26px;
+
+    font-weight: bold;
+
+    margin-top: 25px;
+
+}
+
+button {
+
+    padding: 16px 45px;
+
+    font-size: 20px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    color: white;
+
+    cursor: pointer;
+
+    margin-top: 25px;
+
+}
+
+.on {
+
+    background: #dc2626;
+
+}
+
+.off {
+
+    background: #16a34a;
+
+}
+
+button:disabled {
+
+    opacity: 0.5;
+
+}
+
+#connection {
+
+    font-size: 14px;
+
+    margin-top: 25px;
+
+    color: #94a3b8;
+
+}
+
+.info {
+
+    background: #334155;
+
+    padding: 15px;
+
+    border-radius: 12px;
+
+    margin-top: 25px;
+
+    font-size: 14px;
+
+    line-height: 1.8;
+
+}
+
+</style>
+
 </head>
 
 <body>
 
-    <!-- Welcome Splash Screen -->
-    <div id="splash">
-        <div class="splash-logo">💡</div>
-        <h1>ESP8266</h1>
-        <p>LED CONTROLLER</p>
-        <div class="loader"></div>
+<div class="container">
+
+    <h1>ESP8266 LED Control</h1>
+
+    <div class="hero-icon">💡</div>
+
+    <h2>Built-in LED</h2>
+
+    <p id="status">Checking LED...</p>
+
+    <button id="ledButton"
+    class="off"
+    onclick="toggleLED()"
+    disabled>
+
+        LED ON
+
+    </button>
+
+    <p id="connection">
+        Connecting to ESP8266...
+    </p>
+
+    <div class="info">
+
+        <strong>Device Information</strong>
+
+        <br>
+
+        Device: ESP8266
+
+        <br>
+
+        WiFi: ESP8266_LED
+
+        <br>
+
+        IP: 192.168.4.1
+
     </div>
 
-    <!-- Main Dashboard -->
-    <main id="app" class="hidden">
+</div>
 
-        <header>
-            <div>
-                <h1>ESP8266 Control</h1>
-                <p>Smart LED Dashboard</p>
-            </div>
+<script>
 
-            <div id="connectionBadge" class="badge offline">
-                <span class="dot"></span>
-                <span id="connectionText">Connecting</span>
-            </div>
-        </header>
+const ESP_URL = "";
 
-        <section class="hero">
-            <div class="hero-icon">💡</div>
+let led = false;
 
-            <h2>Built-in LED</h2>
+let connected = false;
 
-            <p>ESP8266 WiFi Controller</p>
+let busy = false;
 
-            <div id="status" class="status off">
-                LED OFF
-            </div>
+const button =
+document.getElementById("ledButton");
 
-            <button id="ledButton" class="off" disabled>
-                TURN ON
-            </button>
+const status =
+document.getElementById("status");
 
-            <p id="message">
-                Waiting for ESP8266...
-            </p>
-        </section>
+const connection =
+document.getElementById("connection");
 
-        <section class="info-card">
 
-            <h3>Device Information</h3>
+// =====================================
+// Update LED Interface
+// =====================================
 
-            <div class="info-row">
-                <span>Device</span>
-                <strong>ESP8266</strong>
-            </div>
+function updateUI() {
 
-            <div class="info-row">
-                <span>WiFi Network</span>
-                <strong>ESP8266_LED</strong>
-            </div>
+    if (led) {
 
-            <div class="info-row">
-                <span>IP Address</span>
-                <strong>192.168.4.1</strong>
-            </div>
+        status.innerHTML = "LED is ON";
 
-            <div class="info-row">
-                <span>Connection</span>
-                <strong id="deviceConnection">Offline</strong>
-            </div>
+        status.style.color = "#4ade80";
 
-        </section>
+        button.innerHTML = "LED OFF";
 
-        <section class="info-card">
+        button.className = "on";
 
-            <h3>Control Information</h3>
+    }
 
-            <p class="description">
-                Connect your phone to the ESP8266 WiFi hotspot
-                to control the built-in LED.
-            </p>
+    else {
 
-            <button id="refreshButton" class="refresh">
-                ↻ Refresh Status
-            </button>
+        status.innerHTML = "LED is OFF";
 
-        </section>
+        status.style.color = "#f87171";
 
-        <footer>
-            ESP8266 LED Controller v2.0
-            <br>
-            Powered by WiFi
-        </footer>
+        button.innerHTML = "LED ON";
 
-    </main>
+        button.className = "off";
 
-    <script src="js/app.js"></script>
+    }
+
+}
+
+
+// =====================================
+// Connection Status
+// =====================================
+
+function updateConnection(state) {
+
+    connected = state;
+
+    if (connected) {
+
+        connection.innerHTML =
+        "ESP8266 Connected";
+
+        connection.style.color =
+        "#4ade80";
+
+        button.disabled = busy;
+
+    }
+
+    else {
+
+        connection.innerHTML =
+        "ESP8266 Disconnected";
+
+        connection.style.color =
+        "#f87171";
+
+        button.disabled = true;
+
+    }
+
+}
+
+
+// =====================================
+// Get LED Status
+// =====================================
+
+async function getStatus() {
+
+    try {
+
+        const response = await fetch(
+            ESP_URL + "/status",
+            { cache: "no-store" }
+        );
+
+        if (!response.ok) {
+            throw new Error("Server Error");
+        }
+
+        const data =
+        (await response.text()).trim();
+
+        if (data !== "ON" && data !== "OFF") {
+            throw new Error("Invalid Response");
+        }
+
+        led = (data === "ON");
+
+        updateUI();
+
+        updateConnection(true);
+
+    }
+
+    catch(error) {
+
+        updateConnection(false);
+
+    }
+
+}
+
+
+// =====================================
+// Toggle LED
+// =====================================
+
+async function toggleLED() {
+
+    if (!connected || busy) return;
+
+    busy = true;
+
+    button.disabled = true;
+
+    try {
+
+        const response = await fetch(
+            ESP_URL + "/toggle",
+            { cache: "no-store" }
+        );
+
+        if (!response.ok) {
+            throw new Error("Toggle Failed");
+        }
+
+        const data =
+        (await response.text()).trim();
+
+        if (data !== "ON" && data !== "OFF") {
+            throw new Error("Invalid Response");
+        }
+
+        led = (data === "ON");
+
+        updateUI();
+
+        updateConnection(true);
+
+    }
+
+    catch(error) {
+
+        updateConnection(false);
+
+    }
+
+    finally {
+
+        busy = false;
+
+        button.disabled = !connected;
+
+    }
+
+}
+
+
+// =====================================
+// Initial Status
+// =====================================
+
+getStatus();
+
+
+// =====================================
+// Automatic Status Refresh
+// =====================================
+
+setInterval(getStatus, 3000);
+
+</script>
 
 </body>
+
 </html>
